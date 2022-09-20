@@ -46,15 +46,15 @@ def main():
         trans_dict = {}
         for trans_ in trans_path_list:
             trans_name = os.path.split(trans_)[-1]
-            trans_key = f"{trans_name.splt('_')[0]}_{trans_name.splt('_')[1]}_" \
-                        f"{trans_name.splt('_')[2]}_{trans_name.splt('_')[3]}_{trans_name.splt('_')[4]}"
+            trans_key = f"{trans_name.split('_')[0]}_{trans_name.split('_')[1]}_" \
+                        f"{trans_name.split('_')[2]}_{trans_name.split('_')[3]}_{trans_name.split('_')[4]}"
             trans_dict[trans_key] = trans_name
 
         for _ind in tqdm(range(len(audio_path_list))):
             audio_ = audio_path_list[_ind]
             audio_name = os.path.split(audio_)[-1]
-            audio_key = f"{audio_name.splt('_')[0]}_{audio_name.splt('_')[1]}_" \
-                        f"{audio_name.splt('_')[2]}_{audio_name.splt('_')[3]}_{audio_name.splt('_')[4]}"
+            audio_key = f"{audio_name.split('_')[0]}_{audio_name.split('_')[1]}_" \
+                        f"{audio_name.split('_')[2]}_{audio_name.split('_')[3]}_{audio_name.split('_')[4]}"
             trans_ = trans_dict[audio_key]
             audio_list, time_stamps, labels = audio_segmentation(audio_, trans_)
             feature_output = None

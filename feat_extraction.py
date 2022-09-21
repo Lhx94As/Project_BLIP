@@ -79,7 +79,8 @@ def w2v_feat_extraction(audio_list, model_path="models/xlsr_53_56k.pt", layer=14
     feat_layer = layer
     feature_output = {}
     audio_names = list(audio_list.keys())
-    model = hubconf.wav2vec2_local(ckpt=model_path)
+    # legacy=True for wav2vec models that depend on fairseq 
+    model = hubconf.wav2vec2_local(ckpt=model_path, legacy=True)
     model.to(device)
     for i in tqdm(range(len(audio_names))):
         audio = audio_list[audio_names[i]]

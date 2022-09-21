@@ -49,20 +49,23 @@ def mfcc_feat_extraction(audio_list, order_1=True, order_2=True, mfccdim=13):
     feature_output = {}
     for i in tqdm(range(len(audio_names))):
         audio = audio_list[audio_names[i]]
-        audioarray, sr_ = librosa.load(path=audio, sr=None)
-        preemphasis = 0.97
-        preemphasized = np.append(audioarray[0], audioarray[1:] - preemphasis * audioarray[:-1])
-        mfcc = librosa.feature.mfcc(y = preemphasized, sr = sr_, n_mfcc=mfccdim,
-                                    hop_length=int(sr_ / 100), n_fft=int(sr_ / 40))
-        if order_1 and order_2:
-            delta1 = librosa.feature.delta(mfcc, order=1)
-            delta2 = librosa.feature.delta(mfcc, order=2)
-            mfcc_features = np.vstack((mfcc, delta1, delta2))
-        else:
-            mfcc_features = mfcc
-        mfcc_features_seg = feat_segmentation(mfcc_features.T)
-        if not isinstance(mfcc_features_seg, int):
-            feature_output[audio_names[i]] = mfcc_features_seg
+        try:
+            audioarray, sr_ = librosa.load(path=audio, sr=None)
+            preemphasis = 0.97
+            preemphasized = np.append(audioarray[0], audioarray[1:] - preemphasis * audioarray[:-1])
+            mfcc = librosa.feature.mfcc(y = preemphasized, sr = sr_, n_mfcc=mfccdim,
+                                        hop_length=int(sr_ / 100), n_fft=int(sr_ / 40))
+            if order_1 and order_2:
+                delta1 = librosa.feature.delta(mfcc, order=1)
+                delta2 = librosa.feature.delta(mfcc, order=2)
+                mfcc_features = np.vstack((mfcc, delta1, delta2))
+            else:
+                mfcc_features = mfcc
+            mfcc_features_seg = feat_segmentation(mfcc_features.T)
+            if not isinstance(mfcc_features_seg, int):
+                feature_output[audio_names[i]] = mfcc_features_seg
+        except:
+            print(f"{audio} is too short to extract mfcc feats")
     return feature_output
 
 def w2v_feat_extraction(audio_list, model_path="models/xlsr_53_56k.pt", layer=14, device="cpu"):

@@ -37,9 +37,9 @@ def main():
             feature_output = w2v_feat_extraction(audio_list, args.w2v_model, args.w2v_layer, device)
             input_dim = 1024
         print("Starting language prediction...")
-        scores, predictions = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
+        scores, predictions, acc = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
         print("starting writing rttm")
-        write_rttm(predictions, scores, labels, time_stamps, args.trans)
+        write_rttm(predictions, scores, labels, time_stamps, acc, args.trans)
     else:
         audio_path_list = glob.glob(audio_path+"/*wav")
         trans_path_list = glob.glob(trans_path+"/*txt")
@@ -65,8 +65,8 @@ def main():
             elif args.feat_type == "wav2vec":
                 feature_output = w2v_feat_extraction(audio_list, args.w2v_model, args.w2v_layer, device)
                 input_dim = 1024
-            scores, predictions = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
-            write_rttm(predictions, scores, labels, time_stamps, args.trans)
+            scores, predictions, acc = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
+            write_rttm(predictions, scores, labels, time_stamps, acc, args.trans)
 
 
 

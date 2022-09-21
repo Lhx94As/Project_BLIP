@@ -31,7 +31,7 @@ def audio_segmentation(audio, transcript):
     print(f"Audio chunks are saved in {save_dir}")
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
-    with open(transcript, "r") as f:
+    with open(transcript, "r", encoding='utf-8') as f:
         lines = f.readlines()
     ind_ = 0
     time_stamps = {}

@@ -19,7 +19,7 @@ def language_prediction(pretrained_model, input_dim=1024, feature_list=None, lab
                                   max_seq_len=10000)
 
     model.to(device)
-    pretrained_dict = torch.load(pretrained_model)
+    pretrained_dict = torch.load(pretrained_model, map_location=device)
     new_state_dict = OrderedDict()
     model_dict = model.state_dict()
     dict_list = []

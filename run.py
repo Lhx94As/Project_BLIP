@@ -15,6 +15,8 @@ def main():
                         help="Path of transcript corresponding to the input BLIP recording")
     parser.add_argument('--feat_type', type=str, default="wav2vec",
                         help="choose features type, either mfcc or wav2vec features")
+    parser.add_argument('--model_type', type=str, default="xsa",
+                        help="choose model type, either pholid or xsa ")
     parser.add_argument('--lid_model', type=str,
                         help="models/lid.ckpt Pre-trained LID model")
     parser.add_argument('--w2v_model', type=str, default=None,
@@ -65,7 +67,12 @@ def main():
             elif args.feat_type == "wav2vec":
                 feature_output = w2v_feat_extraction(audio_list, args.w2v_model, args.w2v_layer, device)
                 input_dim = 1024
-            scores, predictions, acc = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
+            scores, predictions = language_prediction(args.model_type,
+                                                      args.lid_model,
+                                                      input_dim,
+                                                      feature_output,
+                                                      labels,
+                                                      device)
             write_rttm(predictions, scores, labels, time_stamps, acc, args.trans)
 
 

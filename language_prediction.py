@@ -2,24 +2,38 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from model import X_Transformer_E2E_LID
+from model import X_Transformer_E2E_LID, PHOLID
 from feat_extraction import *
 from collections import OrderedDict
 
 
-def language_prediction(pretrained_model, input_dim=1024, feature_list=None, labels=None, device="cpu"):
-    model = X_Transformer_E2E_LID(input_dim=input_dim,
-                                  feat_dim=64,
-                                  d_k=64,
-                                  d_v=64,
-                                  d_ff=2048,
-                                  n_heads=8,
-                                  dropout=0.1,
-                                  n_lang=2,
-                                  max_seq_len=10000)
-
+def language_prediction(model_type, model_path, input_dim=1024, feature_list=None, labels=None, device="cpu"):
+    model = None
+    if model_type == "pholid":
+        model = PHOLID(input_dim=input_dim,
+                       feat_dim = 64,
+                       d_k = 64,
+                       d_v = 64,
+                       d_ff = 2048,
+                       n_heads = 8,
+                       dropout = 0.1,
+                       n_lang = 2,
+                       max_seq_len = 10000
+                       )
+    elif model_type == "xsa":
+        model = X_Transformer_E2E_LID(input_dim=input_dim,
+                                      feat_dim=64,
+                                      d_k=64,
+                                      d_v=64,
+                                      d_ff=2048,
+                                      n_heads=8,
+                                      dropout=0.1,
+                                      n_lang=2,
+                                      max_seq_len=10000)
+    else:
+        print("Only support pho-lid and xsa-lid now")
     model.to(device)
-    pretrained_dict = torch.load(pretrained_model, map_location=device)
+    pretrained_dict = torch.load(model_path, map_location=device)
     new_state_dict = OrderedDict()
     model_dict = model.state_dict()
     dict_list = []
@@ -52,6 +66,8 @@ def language_prediction(pretrained_model, input_dim=1024, feature_list=None, lab
             labels = labels.to(device)
             # Forward pass\
             outputs = model(utt, seq_len)
+            if model_type == "pholid":
+                outputs = outputs[0]
             predicted = torch.argmax(outputs, -1)
             total += labels.size(-1)
             correct += (predicted == labels).sum().item()
@@ -66,7 +82,7 @@ def language_prediction(pretrained_model, input_dim=1024, feature_list=None, lab
     acc = correct / total
     print('Current Acc.: {:.4f} %'.format(100 * acc))
     score_matrix = score_matrix.squeeze().cpu().numpy()
-    return scores, predictions, acc
+    return scores, predictions
 
 
 

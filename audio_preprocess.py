@@ -47,8 +47,8 @@ def audio_segmentation(audio, transcript):
                     or info_[-1].strip() == "reddot": # add more languages/sound types here
                 audio_seg = audio_name + f'_{ind_}.wav'
                 save_name = save_dir + audio_seg
-                start = float(info_[3])
-                end = float(info_[5])
+                start = float(info_[2])
+                end = float(info_[3])
                 start_ = start * 1000
                 end_ = end * 1000
                 data_seg = data_[start_:end_]

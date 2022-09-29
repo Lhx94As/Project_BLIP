@@ -56,9 +56,10 @@ def audio_segmentation(audio, transcript):
                 # save related dicts: audio_list, time stamps, and labels. Will be used for writing rttm
                 audio_list[audio_seg] = save_name
                 time_stamps[audio_seg] = f"{start} {end}"
+                speaker[audio_seg] = info_[0]
                 labels[audio_seg] = info_[-1]
                 ind_ += 1
-    return audio_list, time_stamps, labels
+    return audio_list, time_stamps, speaker, labels
 
 if __name__ == "__main__":
     audio_ = 'audio.wav'

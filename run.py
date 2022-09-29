@@ -28,7 +28,7 @@ def main():
     audio_path = args.audio
     trans_path = args.trans
     if audio_path.endswith('.wav'):
-        audio_list, time_stamps, labels = audio_segmentation(audio_path, trans_path)
+        audio_list, speaker, time_stamps, labels = audio_segmentation(audio_path, trans_path)
         feature_output = None
         input_dim = None
         print("Starting {} feature extraction".format(args.feat_type))
@@ -39,9 +39,9 @@ def main():
             feature_output = w2v_feat_extraction(audio_list, args.w2v_model, args.w2v_layer, device)
             input_dim = 1024
         print("Starting language prediction...")
-        scores, predictions, acc = language_prediction(args.lid_model, input_dim, feature_output, labels, device)
+        scores, predictions, acc = language_prediction(args.model_type, args.lid_model, input_dim, feature_output, labels, device)
         print("starting writing rttm")
-        write_rttm(predictions, scores, labels, time_stamps, acc, args.trans)
+        write_rttm(predictions, scores, labels, time_stamps, speaker, acc, args.trans)
     else:
         audio_path_list = glob.glob(audio_path+"/*wav")
         trans_path_list = glob.glob(trans_path+"/*txt")
@@ -58,7 +58,7 @@ def main():
             audio_key = f"{audio_name.split('_')[0]}_{audio_name.split('_')[1]}_" \
                         f"{audio_name.split('_')[2]}_{audio_name.split('_')[3]}_{audio_name.split('_')[4]}"
             trans_ = trans_dict[audio_key]
-            audio_list, time_stamps, labels = audio_segmentation(audio_, trans_)
+            audio_list, speaker, time_stamps, labels = audio_segmentation(audio_, trans_)
             feature_output = None
             input_dim = None
             if args.feat_type == "mfcc":
@@ -73,7 +73,7 @@ def main():
                                                       feature_output,
                                                       labels,
                                                       device)
-            write_rttm(predictions, scores, labels, time_stamps, acc, args.trans)
+            write_rttm(predictions, scores, labels, time_stamps, speaker, acc, args.trans)
 
 
 

@@ -67,7 +67,7 @@ def main():
             elif args.feat_type == "wav2vec":
                 feature_output = w2v_feat_extraction(audio_list, args.w2v_model, args.w2v_layer, device)
                 input_dim = 1024
-            scores, predictions = language_prediction(args.model_type,
+            scores, predictions, acc = language_prediction(args.model_type,
                                                       args.lid_model,
                                                       input_dim,
                                                       feature_output,

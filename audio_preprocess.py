@@ -64,7 +64,7 @@ def audio_segmentation(audio, transcript):
 if __name__ == "__main__":
     audio_ = 'audio.wav'
     trans_ = 'trans.txt'
-    audio_list, time_stamps, labels = audio_segmentation(audio_, trans_)
+    audio_list, time_stamps, speaker, labels = audio_segmentation(audio_, trans_)
     # print(audio_list)
 
 

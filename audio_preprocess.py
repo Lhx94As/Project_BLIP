@@ -36,6 +36,7 @@ def audio_segmentation(audio, transcript):
     ind_ = 0
     time_stamps = {}
     labels = {}
+    speaker = {}
     audio_list = {}
     data_ = AudioSegment.from_file(audio)
     for i in tqdm(range(len(lines))):

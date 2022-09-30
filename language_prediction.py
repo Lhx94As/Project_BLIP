@@ -82,7 +82,7 @@ def language_prediction(model_type, model_path, input_dim=1024, feature_list=Non
     acc = correct / total
     print('Current Acc.: {:.4f} %'.format(100 * acc))
     score_matrix = score_matrix.squeeze().cpu().numpy()
-    return scores, predictions
+    return scores, predictions, acc
 
 
 
